@@ -1,0 +1,39 @@
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews -Indexes
+    </IfModule>
+
+    RewriteEngine On
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} (.+)/$
+    RewriteRule ^ %1 [L,R=301]
+
+    # Send Requests To Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+
+    # cors
+    Header set Access-Control-Allow-Origin "*"
+</IfModule>
+
+# Hide a specific file
+<Files .env>
+    Order allow,deny
+    Deny from all
+</Files>
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-SSL} !on
+RewriteCond %{HTTP_HOST} ^grabup\.catchyshopug\.xyz$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.grabup\.catchyshopug\.xyz$
+RewriteRule ^/?$ "https\:\/\/grabup\.catchyshopug\.xyz\/" [R=301,L]
+RewriteCond %{HTTP_HOST} ^eastexpressug\.com$ [OR]
+RewriteCond %{HTTP_HOST} ^www\.eastexpressug\.com$
+RewriteRule ^www\.eastexpressug\.com$ "https\:\/\/www\.eastexpressug\.com\/" [R=301,L]
+
